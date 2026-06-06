@@ -4,171 +4,492 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Harini R - Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', sans-serif; background: #0f0f0f; color: #fff; }
-    header {
-      background: linear-gradient(135deg, #6e00ff, #ff00aa);
-      padding: 60px 20px;
-      text-align: center;
+    :root {
+      --bg: #050510;
+      --card: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.08);
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --accent: #6366f1;
+      --accent2: #06b6d4;
+      --green: #10b981;
     }
-    header h1 { font-size: 3rem; margin-bottom: 10px; }
-    header p { font-size: 1.2rem; opacity: 0.9; }
-    section {
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 20px;
+    * { margin:0; padding:0; box-sizing:border-box; scroll-behavior:smooth; }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); overflow-x:hidden; }
+
+    /* CANVAS */
+    #bg-canvas { position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+
+    /* LOADER */
+    #loader {
+      position:fixed; inset:0; background:#050510;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      z-index:9999; transition:opacity 0.5s;
     }
-    h2 {
-      font-size: 1.8rem;
-      margin-bottom: 20px;
-      color: #bb86fc;
-      border-bottom: 2px solid #6e00ff;
-      padding-bottom: 8px;
+    .loader-text { font-size:1.2rem; color:var(--accent2); letter-spacing:3px; animation:pulse2 1s infinite; }
+    .loader-bar { width:200px; height:2px; background:rgba(255,255,255,0.1); margin-top:20px; border-radius:2px; overflow:hidden; }
+    .loader-fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); width:0; animation:load 1.5s forwards; }
+    @keyframes load { to{width:100%} }
+    @keyframes pulse2 { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+    /* NAVBAR */
+    nav {
+      position:fixed; top:0; width:100%; z-index:100;
+      background:rgba(5,5,16,0.8); backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border);
+      display:flex; justify-content:center; align-items:center;
+      gap:40px; padding:18px 20px;
+      transition:all 0.3s;
     }
-    .skills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
+    nav a {
+      color:var(--muted); text-decoration:none; font-size:0.9rem;
+      font-weight:500; letter-spacing:0.5px;
+      transition:color 0.3s; position:relative; padding:4px 0;
     }
-    .skill-badge {
-      background: #1e1e1e;
-      border: 1px solid #6e00ff;
-      color: #bb86fc;
-      padding: 8px 18px;
-      border-radius: 20px;
-      font-size: 0.95rem;
+    nav a::after {
+      content:''; position:absolute; bottom:0; left:0;
+      width:0; height:1px; background:var(--accent2);
+      transition:width 0.3s;
     }
-    .about p {
-      line-height: 1.8;
-      color: #ccc;
-      font-size: 1rem;
+    nav a:hover { color:var(--accent2); }
+    nav a:hover::after { width:100%; }
+    .nav-btn {
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:white; border:none; padding:8px 20px;
+      border-radius:20px; font-size:0.85rem; cursor:pointer;
+      font-weight:500; transition:transform 0.2s, opacity 0.2s;
     }
+    .nav-btn:hover { transform:scale(1.05); opacity:0.9; }
+
+    /* HERO */
+    .hero {
+      position:relative; z-index:1;
+      min-height:100vh;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      text-align:center; padding:100px 20px 60px;
+    }
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:8px;
+      background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.3);
+      color:#a5b4fc; padding:8px 20px; border-radius:50px;
+      font-size:0.85rem; margin-bottom:30px;
+      animation:fadeUp 0.8s ease;
+    }
+    .dot { width:6px; height:6px; background:#10b981; border-radius:50%; animation:blink2 1.5s infinite; }
+    @keyframes blink2 { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .hero h1 {
+      font-size:clamp(2.5rem,6vw,4.5rem);
+      font-weight:700; line-height:1.1;
+      margin-bottom:20px;
+      animation:fadeUp 1s ease;
+    }
+    .gradient-text {
+      background:linear-gradient(135deg,#a5b4fc,#67e8f9,#6ee7b7);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-size:200%; animation:shimmer 3s infinite;
+    }
+    @keyframes shimmer { 0%{background-position:0%} 100%{background-position:200%} }
+    .hero-sub {
+      font-size:1.2rem; color:var(--muted);
+      margin-bottom:15px; animation:fadeUp 1.2s ease;
+    }
+    #typed-text { color:var(--accent2); font-weight:600; border-right:2px solid var(--accent2); }
+    .hero-desc {
+      max-width:500px; color:var(--muted); line-height:1.8;
+      margin:0 auto 40px; animation:fadeUp 1.4s ease;
+    }
+    .hero-btns { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; animation:fadeUp 1.6s ease; }
+    .btn-primary {
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:white; border:none; padding:14px 32px;
+      border-radius:50px; font-size:1rem; cursor:pointer;
+      font-weight:500; text-decoration:none;
+      transition:transform 0.2s, box-shadow 0.2s;
+      box-shadow:0 0 20px rgba(99,102,241,0.3);
+    }
+    .btn-primary:hover { transform:translateY(-3px); box-shadow:0 10px 30px rgba(99,102,241,0.4); }
+    .btn-outline {
+      background:transparent; color:var(--text);
+      border:1px solid var(--border); padding:14px 32px;
+      border-radius:50px; font-size:1rem; cursor:pointer;
+      font-weight:500; text-decoration:none;
+      transition:all 0.2s;
+    }
+    .btn-outline:hover { border-color:var(--accent2); color:var(--accent2); }
+    .scroll-indicator {
+      position:absolute; bottom:30px;
+      display:flex; flex-direction:column; align-items:center; gap:8px;
+      color:var(--muted); font-size:0.8rem; letter-spacing:2px;
+      animation:bounce2 2s infinite;
+    }
+    .scroll-line { width:1px; height:40px; background:linear-gradient(to bottom,var(--accent2),transparent); }
+    @keyframes bounce2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
+
+    /* SECTIONS */
+    .section { position:relative; z-index:1; max-width:900px; margin:0 auto; padding:80px 20px; }
+    .section-label {
+      display:inline-flex; align-items:center; gap:8px;
+      color:var(--accent2); font-size:0.8rem; font-weight:600;
+      letter-spacing:2px; text-transform:uppercase; margin-bottom:12px;
+    }
+    .section-label::before { content:''; width:20px; height:1px; background:var(--accent2); }
+    .section-title {
+      font-size:clamp(1.8rem,4vw,2.5rem); font-weight:700;
+      margin-bottom:50px; color:#f1f5f9;
+    }
+
+    /* ABOUT */
+    .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:30px; }
+    .about-card {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:16px; padding:28px;
+      transition:transform 0.3s, border-color 0.3s;
+    }
+    .about-card:hover { transform:translateY(-4px); border-color:rgba(99,102,241,0.3); }
+    .about-icon { font-size:2rem; margin-bottom:16px; }
+    .about-card h3 { font-size:1rem; color:#a5b4fc; margin-bottom:8px; }
+    .about-card p { color:var(--muted); line-height:1.7; font-size:0.95rem; }
+
+    /* SKILLS */
+    .skills-grid { display:flex; flex-wrap:wrap; gap:12px; }
+    .skill-chip {
+      display:flex; align-items:center; gap:8px;
+      background:var(--card); border:1px solid var(--border);
+      padding:10px 20px; border-radius:50px;
+      font-size:0.9rem; color:var(--text);
+      transition:all 0.3s; cursor:default;
+    }
+    .skill-chip:hover {
+      border-color:var(--accent2); color:var(--accent2);
+      transform:translateY(-3px);
+      box-shadow:0 8px 20px rgba(6,182,212,0.15);
+    }
+    .skill-dot { width:6px; height:6px; border-radius:50%; background:var(--accent2); }
+
+    /* PROJECTS */
     .project-card {
-      background: #1e1e1e;
-      border: 1px solid #6e00ff;
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 20px;
+      background:var(--card); border:1px solid var(--border);
+      border-radius:20px; padding:32px; margin-bottom:24px;
+      transition:all 0.4s; position:relative; overflow:hidden;
     }
-    .project-card h3 {
-      color: #bb86fc;
-      font-size: 1.2rem;
-      margin-bottom: 10px;
+    .project-card::before {
+      content:''; position:absolute; top:0; left:0; right:0;
+      height:2px; background:linear-gradient(90deg,var(--accent),var(--accent2),var(--green));
+      transform:scaleX(0); transform-origin:left;
+      transition:transform 0.4s;
     }
-    .project-card p {
-      color: #ccc;
-      line-height: 1.6;
-      margin-bottom: 8px;
+    .project-card:hover { transform:translateY(-6px); border-color:rgba(99,102,241,0.3); box-shadow:0 20px 40px rgba(0,0,0,0.3); }
+    .project-card:hover::before { transform:scaleX(1); }
+    .project-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; flex-wrap:wrap; gap:12px; }
+    .project-num { font-size:3rem; font-weight:700; color:rgba(99,102,241,0.1); line-height:1; }
+    .project-type-badge {
+      background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3);
+      color:#34d399; padding:4px 14px; border-radius:20px; font-size:0.78rem; font-weight:500;
     }
-    .project-type {
-      color: #ff00aa;
-      font-size: 0.85rem;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
+    .project-card h3 { font-size:1.2rem; color:#f1f5f9; margin-bottom:10px; font-weight:600; }
+    .project-card p { color:var(--muted); line-height:1.8; font-size:0.95rem; margin-bottom:16px; }
+    .tags { display:flex; flex-wrap:wrap; gap:8px; }
     .tag {
-      display: inline-block;
-      background: #6e00ff33;
-      color: #bb86fc;
-      padding: 4px 12px;
-      border-radius: 12px;
-      font-size: 0.8rem;
-      margin: 6px 4px 0 0;
+      background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.2);
+      color:#a5b4fc; padding:4px 14px; border-radius:20px; font-size:0.78rem;
     }
+
+    /* CONTACT */
+    .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .contact-card {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:16px; padding:24px;
+      text-decoration:none; color:var(--text);
+      display:flex; align-items:center; gap:16px;
+      transition:all 0.3s;
+    }
+    .contact-card:hover { border-color:var(--accent2); transform:translateY(-4px); box-shadow:0 10px 30px rgba(6,182,212,0.1); }
+    .contact-icon {
+      width:48px; height:48px; border-radius:12px;
+      background:rgba(99,102,241,0.1); display:flex;
+      align-items:center; justify-content:center; font-size:1.4rem;
+      flex-shrink:0;
+    }
+    .contact-card h4 { font-size:0.85rem; color:var(--muted); margin-bottom:4px; }
+    .contact-card p { font-size:0.95rem; color:#a5b4fc; }
+
+    /* FOOTER */
     footer {
-      text-align: center;
-      padding: 30px;
-      color: #666;
-      margin-top: 40px;
-      border-top: 1px solid #222;
+      position:relative; z-index:1;
+      text-align:center; padding:40px 20px;
+      color:var(--muted); font-size:0.9rem;
+      border-top:1px solid var(--border);
     }
-    a { color: #bb86fc; text-decoration: none; }
-    a:hover { text-decoration: underline; }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+    .reveal { opacity:0; transform:translateY(30px); transition:all 0.6s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+
+    /* DIVIDER */
+    .divider {
+      width:100%; height:1px;
+      background:linear-gradient(90deg,transparent,var(--border),transparent);
+      margin:0 auto;
+    }
+
+    @media(max-width:600px) {
+      .about-grid { grid-template-columns:1fr; }
+      .contact-grid { grid-template-columns:1fr; }
+      nav { gap:20px; }
+    }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>👋 Hi, I'm Harini R</h1>
-    <p>B.Tech IT Student | Web Developer | Problem Solver</p>
-  </header>
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="loader-text">LOADING</div>
+    <div class="loader-bar"><div class="loader-fill"></div></div>
+  </div>
 
-  <section class="about">
-    <h2>About Me</h2>
-    <p>
-      I'm a final year B.Tech Information Technology student from Tiruvallur, India.
-      I am passionate about building hardware and software projects and solving
-      real-world problems using technology. Currently learning Web Development,
-      DSA, and exploring new technologies every day.
+  <!-- CANVAS BACKGROUND -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+    <a href="https://www.linkedin.com/in/harini-ravi-6659563a2/" target="_blank" class="nav-btn">Hire Me</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge"><div class="dot"></div> Available for opportunities</div>
+    <h1><span class="gradient-text">Harini R</span></h1>
+    <p class="hero-sub">I am a <span id="typed-text"></span></p>
+    <p class="hero-desc">
+      Final year B.Tech Information Technology student from Tiruvallur, India.
+      Passionate about IoT, hardware-software integration, and building solutions that matter.
     </p>
-  </section>
-
-  <section>
-    <h2>🛠️ Skills</h2>
-    <div class="skills">
-      <span class="skill-badge">Python</span>
-      <span class="skill-badge">Java</span>
-      <span class="skill-badge">SQL</span>
-      <span class="skill-badge">HTML5</span>
-      <span class="skill-badge">CSS3</span>
-      <span class="skill-badge">JavaScript</span>
-      <span class="skill-badge">Microsoft Excel</span>
-      <span class="skill-badge">GitHub</span>
-      <span class="skill-badge">Arduino</span>
-      <span class="skill-badge">IoT</span>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-primary">View My Work</a>
+      <a href="#contact" class="btn-outline">Get In Touch</a>
+    </div>
+    <div class="scroll-indicator">
+      <div class="scroll-line"></div>
+      <span>SCROLL</span>
     </div>
   </section>
 
-  <section>
-    <h2>💼 Projects</h2>
+  <div class="divider"></div>
 
-    <div class="project-card">
-      <h3>💡 Automatic Staircase Lighting System Using Arduino</h3>
-      <p class="project-type">🔧 Hardware + Software Project</p>
-      <p>
-        Designed and built a smart staircase lighting system combining hardware
-        components (Arduino, PIR sensors, LED lights) with software programming.
-        The system automatically turns lights ON when a person is detected and
-        OFF when they leave — saving energy and improving safety through
-        real-time automation.
-      </p>
-      <span class="tag">Arduino</span>
-      <span class="tag">IoT</span>
-      <span class="tag">Hardware</span>
-      <span class="tag">Embedded C</span>
-      <span class="tag">Automation</span>
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="reveal">
+      <div class="section-label">About Me</div>
+      <h2 class="section-title">Who I Am</h2>
+      <div class="about-grid">
+        <div class="about-card">
+          <div class="about-icon">🎓</div>
+          <h3>Education</h3>
+          <p>Final year B.Tech Information Technology student passionate about turning ideas into real-world solutions.</p>
+        </div>
+        <div class="about-card">
+          <div class="about-icon">🔧</div>
+          <h3>Expertise</h3>
+          <p>Hands-on experience in IoT systems, Arduino hardware, and software development with Python, Java & SQL.</p>
+        </div>
+        <div class="about-card">
+          <div class="about-icon">💡</div>
+          <h3>Interests</h3>
+          <p>IoT innovation, embedded systems, web development, and building tech that improves everyday life.</p>
+        </div>
+        <div class="about-card">
+          <div class="about-icon">🚀</div>
+          <h3>Goal</h3>
+          <p>Seeking opportunities in IT to apply my skills, grow as a developer, and contribute to meaningful projects.</p>
+        </div>
+      </div>
     </div>
-
-    <div class="project-card">
-      <h3>🏥 IoT-Based Comprehensive Fall Detection and Health Monitoring Ecosystem</h3>
-      <p class="project-type">🔧 Hardware + Software Project</p>
-      <p>
-        Developed a complete hardware and software ecosystem using IoT devices
-        and sensors to detect falls and monitor vital health parameters in real time.
-        The software component processes sensor data and sends instant alerts to
-        caregivers when a fall or abnormal health condition is detected —
-        improving elderly care and patient safety.
-      </p>
-      <span class="tag">IoT</span>
-      <span class="tag">Hardware</span>
-      <span class="tag">Health Monitoring</span>
-      <span class="tag">Fall Detection</span>
-      <span class="tag">Real-time Alerts</span>
-      <span class="tag">Sensors</span>
-    </div>
-
   </section>
 
-  <section>
-    <h2>📫 Contact</h2>
-    <p>LinkedIn: <a href="https://www.linkedin.com/in/harini-ravi-6659563a2/" target="_blank">Harini Ravi</a></p>
-    <p>GitHub: <a href="https://github.com/harini497" target="_blank">harini497</a></p>
+  <div class="divider"></div>
+
+  <!-- SKILLS -->
+  <section class="section" id="skills">
+    <div class="reveal">
+      <div class="section-label">Skills</div>
+      <h2 class="section-title">What I Work With</h2>
+      <div class="skills-grid">
+        <div class="skill-chip"><div class="skill-dot"></div>Python</div>
+        <div class="skill-chip"><div class="skill-dot"></div>Java</div>
+        <div class="skill-chip"><div class="skill-dot"></div>SQL</div>
+        <div class="skill-chip"><div class="skill-dot"></div>HTML5</div>
+        <div class="skill-chip"><div class="skill-dot"></div>CSS3</div>
+        <div class="skill-chip"><div class="skill-dot"></div>JavaScript</div>
+        <div class="skill-chip"><div class="skill-dot"></div>Arduino</div>
+        <div class="skill-chip"><div class="skill-dot"></div>IoT</div>
+        <div class="skill-chip"><div class="skill-dot"></div>Embedded C</div>
+        <div class="skill-chip"><div class="skill-dot"></div>Microsoft Excel</div>
+        <div class="skill-chip"><div class="skill-dot"></div>GitHub</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- PROJECTS -->
+  <section class="section" id="projects">
+    <div class="reveal">
+      <div class="section-label">Projects</div>
+      <h2 class="section-title">What I've Built</h2>
+
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-num">01</div>
+          <div class="project-type-badge">🔧 Hardware + Software</div>
+        </div>
+        <h3>Automatic Staircase Lighting System Using Arduino</h3>
+        <p>Designed and built a smart staircase lighting system combining hardware components (Arduino, PIR sensors, LED lights) with software programming. The system automatically turns lights ON when a person is detected and OFF when they leave — saving energy and improving safety through real-time automation.</p>
+        <div class="tags">
+          <span class="tag">Arduino</span>
+          <span class="tag">IoT</span>
+          <span class="tag">Hardware</span>
+          <span class="tag">Embedded C</span>
+          <span class="tag">Automation</span>
+          <span class="tag">PIR Sensor</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-num">02</div>
+          <div class="project-type-badge">🔧 Hardware + Software</div>
+        </div>
+        <h3>IoT-Based Comprehensive Fall Detection and Health Monitoring Ecosystem</h3>
+        <p>Developed a complete hardware and software ecosystem using IoT devices and sensors to detect falls and monitor vital health parameters in real time. The software component processes sensor data and sends instant alerts to caregivers when a fall or abnormal health condition is detected — improving elderly care and patient safety.</p>
+        <div class="tags">
+          <span class="tag">IoT</span>
+          <span class="tag">Hardware</span>
+          <span class="tag">Health Monitoring</span>
+          <span class="tag">Fall Detection</span>
+          <span class="tag">Real-time Alerts</span>
+          <span class="tag">Sensors</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- CONTACT -->
+  <section class="section" id="contact">
+    <div class="reveal">
+      <div class="section-label">Contact</div>
+      <h2 class="section-title">Let's Connect</h2>
+      <div class="contact-grid">
+        <a class="contact-card" href="https://www.linkedin.com/in/harini-ravi-6659563a2/" target="_blank">
+          <div class="contact-icon">🔗</div>
+          <div>
+            <h4>LinkedIn</h4>
+            <p>Harini Ravi</p>
+          </div>
+        </a>
+        <a class="contact-card" href="https://github.com/harini497" target="_blank">
+          <div class="contact-icon">💻</div>
+          <div>
+            <h4>GitHub</h4>
+            <p>harini497</p>
+          </div>
+        </a>
+      </div>
+    </div>
   </section>
 
   <footer>
-    <p>© 2026 Harini R | Built with ❤️ using HTML & CSS</p>
+    <p>© 2026 Harini R &nbsp;·&nbsp; Designed & Built with ❤️ &nbsp;·&nbsp; Tiruvallur, India</p>
   </footer>
+
+  <script>
+    // LOADER
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const l = document.getElementById('loader');
+        l.style.opacity = '0';
+        setTimeout(() => l.style.display = 'none', 500);
+      }, 1600);
+    });
+
+    // STARS + PARTICLES CANVAS
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let W = canvas.width = window.innerWidth;
+    let H = canvas.height = window.innerHeight;
+    window.addEventListener('resize', () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; });
+
+    const stars = Array.from({length:120}, () => ({
+      x: Math.random()*W, y: Math.random()*H,
+      r: Math.random()*1.2+0.3,
+      o: Math.random(), s: Math.random()*0.008+0.002
+    }));
+
+    const particles = Array.from({length:25}, () => ({
+      x: Math.random()*W, y: Math.random()*H,
+      vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.3,
+      r: Math.random()*2+1, o: Math.random()*0.3+0.1
+    }));
+
+    function draw() {
+      ctx.clearRect(0,0,W,H);
+      stars.forEach(s => {
+        s.o += s.s; if(s.o>1||s.o<0) s.s*=-1;
+        ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+        ctx.fillStyle=`rgba(165,180,252,${s.o})`; ctx.fill();
+      });
+      particles.forEach(p => {
+        p.x+=p.vx; p.y+=p.vy;
+        if(p.x<0||p.x>W) p.vx*=-1;
+        if(p.y<0||p.y>H) p.vy*=-1;
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle=`rgba(6,182,212,${p.o})`; ctx.fill();
+      });
+      particles.forEach((p,i) => {
+        particles.forEach((p2,j) => {
+          if(i>=j) return;
+          const dx=p.x-p2.x, dy=p.y-p2.y;
+          const dist=Math.sqrt(dx*dx+dy*dy);
+          if(dist<120) {
+            ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(p2.x,p2.y);
+            ctx.strokeStyle=`rgba(99,102,241,${0.15*(1-dist/120)})`; ctx.lineWidth=0.5; ctx.stroke();
+          }
+        });
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+
+    // TYPING
+    const texts = ["B.Tech IT Student 🎓","IoT Developer 🔧","Web Developer 💻","Problem Solver 🚀"];
+    let t=0,c=0,del=false;
+    const el=document.getElementById("typed-text");
+    function type(){
+      const cur=texts[t];
+      el.textContent=del?cur.substring(0,c--):cur.substring(0,c++);
+      if(!del&&c>cur.length){del=true;setTimeout(type,1500);return;}
+      if(del&&c<0){del=false;t=(t+1)%texts.length;}
+      setTimeout(type,del?50:100);
+    }
+    type();
+
+    // SCROLL REVEAL
+    const reveals=document.querySelectorAll('.reveal');
+    const obs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+    },{threshold:0.1});
+    reveals.forEach(r=>obs.observe(r));
+  </script>
 
 </body>
 </html>
