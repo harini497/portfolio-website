@@ -7,7 +7,6 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', sans-serif; background: #0f0f0f; color: #fff; }
-
     header {
       background: linear-gradient(135deg, #6e00ff, #ff00aa);
       padding: 60px 20px;
@@ -15,7 +14,6 @@
     }
     header h1 { font-size: 3rem; margin-bottom: 10px; }
     header p { font-size: 1.2rem; opacity: 0.9; }
-
     section {
       max-width: 800px;
       margin: 40px auto;
@@ -45,6 +43,31 @@
       line-height: 1.8;
       color: #ccc;
       font-size: 1rem;
+    }
+    .project-card {
+      background: #1e1e1e;
+      border: 1px solid #6e00ff;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .project-card h3 {
+      color: #bb86fc;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+    .project-card p {
+      color: #ccc;
+      line-height: 1.6;
+    }
+    .tag {
+      display: inline-block;
+      background: #6e00ff33;
+      color: #bb86fc;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      margin: 6px 4px 0 0;
     }
     footer {
       text-align: center;
@@ -86,6 +109,24 @@
       <span class="skill-badge">GitHub</span>
     </div>
   </section>
+
+  <section>
+    <h2>💼 Projects</h2>
+    <div class="project-card">
+      <h3>🗄️ Project 1 Name</h3>
+      <p>Short description of your project goes here.</p>
+      <span class="tag">SQL</span>
+      <span class="tag">Database</span>
+    </div>
+    <div class="project-card">
+      <h3>🐍 Project 2 Name</h3>
+      <p>Short description of your project goes here.</p>
+      <span class="tag">Python</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>📫 Contact</h2>
     <p>LinkedIn: <a href="https://www.linkedin.com/in/harini-ravi-6659563a2/" target="_blank">Harini Ravi</a></p>
     <p>GitHub: <a href="https://github.com/harini497" target="_blank">harini497</a></p>
   </section>
